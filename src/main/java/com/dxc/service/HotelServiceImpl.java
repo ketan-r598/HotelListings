@@ -15,19 +15,24 @@ import com.dxc.repository.HotelRepository;
 public class HotelServiceImpl implements HotelService {
 
 	@Autowired
-	HotelRepository repo;
+	private HotelRepository repo;
 	
 	@Override
 	public void addHotel(Hotel hotel) throws DuplicateHotelIDException {
 		
 		int id = hotel.getHotelId();
-		Optional<Hotel> _hotel = Optional.of(repo.getByHotelId(id));
+		System.out.println(id);
+		
+		Optional<Hotel> _hotel = repo.findById(id);
+		System.out.println(_hotel.isPresent());
 		
 		if(_hotel.isEmpty()) {
+			System.out.println(hotel);
 			repo.save(hotel);
 			System.out.println("\nHotel Saved Successfully\n");
 			return;
 		}
+		
 		throw new DuplicateHotelIDException();
 	}
 
@@ -35,7 +40,7 @@ public class HotelServiceImpl implements HotelService {
 	public void updateHotel(Hotel hotel) throws HotelDoesNotExistException {
 		
 		int id = hotel.getHotelId();
-		Optional<Hotel> _hotel = Optional.of(repo.getByHotelId(id));
+		Optional<Hotel> _hotel = repo.findById(id);
 		
 		if(_hotel.isEmpty()) {
 			throw new HotelDoesNotExistException();
@@ -48,7 +53,7 @@ public class HotelServiceImpl implements HotelService {
 	public void deleteHotel(Hotel hotel) throws HotelDoesNotExistException {
 		
 		int id = hotel.getHotelId();
-		Optional<Hotel> _hotel = Optional.of(repo.getByHotelId(id));
+		Optional<Hotel> _hotel = repo.findById(id);
 		
 		if(_hotel.isEmpty()) {
 			throw new HotelDoesNotExistException();
@@ -65,7 +70,7 @@ public class HotelServiceImpl implements HotelService {
 	@Override
 	public Hotel getHotel(int id) throws HotelDoesNotExistException {
 		
-		Optional<Hotel> _hotel = Optional.of(repo.getByHotelId(id));
+		Optional<Hotel> _hotel = repo.findById(id);
 		
 		if(_hotel.isEmpty()) {
 			throw new HotelDoesNotExistException();
